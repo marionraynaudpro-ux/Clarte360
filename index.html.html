@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarté 360 — Identifiez ce qui bloque votre situation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F7F3EE;
+  --warm: #FDFAF6;
+  --sand: #E8DDD0;
+  --taupe: #C4B4A2;
+  --brown: #8B6F5A;
+  --deep: #1A1A2E;
+  --a1: #6B4FA0; --a1l: #A98FD0;
+  --a2: #7A5C3A; --a2l: #B09070;
+  --a3: #4A6FA5; --a3l: #7A9FD5;
+  --a4: #2A7060; --a4l: #6ABFA8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--warm); color: var(--deep); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.7; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(253,250,246,0.92); backdrop-filter: blur(12px);
+  padding: 20px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--sand);
+}
+.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; color: var(--deep); font-weight: 300; }
+.nav-cta {
+  padding: 10px 24px; background: var(--deep); color: white;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border: none; font-family: 'DM Sans', sans-serif;
+  transition: opacity .2s;
+}
+.nav-cta:hover { opacity: 0.8; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; padding: 140px 80px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; right: -200px; top: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse, rgba(74,111,165,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--taupe); margin-bottom: 20px; display: block; }
+.hero-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px,5vw,72px); font-weight: 300; line-height: 1.05; margin-bottom: 28px; }
+.hero-h1 em { font-style: italic; color: var(--a3); }
+.hero-sub { font-size: 16px; color: #5A5A7A; line-height: 1.9; max-width: 480px; margin-bottom: 40px; }
+.hero-cta-group { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.btn-primary {
+  padding: 16px 36px; background: var(--deep); color: white;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: opacity .2s;
+  text-decoration: none; display: inline-block;
+}
+.btn-primary:hover { opacity: 0.85; }
+.btn-ghost {
+  padding: 16px 36px; background: transparent; color: var(--deep);
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--sand); font-family: 'DM Sans', sans-serif;
+  transition: all .2s; text-decoration: none; display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--deep); }
+.hero-note { font-size: 12px; color: var(--taupe); margin-top: 20px; }
+
+/* HERO VISUEL */
+.hero-visual { display: flex; flex-direction: column; gap: 3px; }
+.hero-stat-card {
+  padding: 24px 28px; background: var(--warm);
+  border-left: 3px solid transparent; display: flex; gap: 24px; align-items: flex-start;
+}
+.hero-stat-card:nth-child(1) { border-color: var(--a1); }
+.hero-stat-card:nth-child(2) { border-color: var(--a3); margin-left: 24px; }
+.hero-stat-card:nth-child(3) { border-color: var(--a4); margin-left: 48px; }
+.hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; line-height: 1; }
+.hero-stat-card:nth-child(1) .hero-stat-num { color: var(--a1); }
+.hero-stat-card:nth-child(2) .hero-stat-num { color: var(--a3); }
+.hero-stat-card:nth-child(3) .hero-stat-num { color: var(--a4); }
+.hero-stat-text { padding-top: 6px; }
+.hero-stat-label { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.hero-stat-sub { font-size: 12px; color: var(--taupe); line-height: 1.5; }
+
+/* ── SECTION GÉNÉRIQUE ── */
+.section { padding: 100px 80px; }
+.section-tag { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--taupe); display: block; margin-bottom: 16px; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px,4vw,56px); font-weight: 300; line-height: 1.1; margin-bottom: 20px; }
+.section-title em { font-style: italic; color: var(--a3); }
+.section-sub { font-size: 16px; color: #5A5A7A; line-height: 1.9; max-width: 560px; }
+.divider { height: 1px; background: var(--sand); margin: 0 80px; }
+
+/* ── PROBLÈME ── */
+.problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 56px; }
+.problem-card { padding: 36px 32px; background: var(--cream); position: relative; overflow: hidden; }
+.problem-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.problem-card:nth-child(1)::before { background: var(--a1); }
+.problem-card:nth-child(2)::before { background: var(--a3); }
+.problem-card:nth-child(3)::before { background: var(--a4); }
+.problem-icon { font-size: 32px; margin-bottom: 20px; opacity: 0.6; }
+.problem-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; line-height: 1.3; margin-bottom: 16px; }
+.problem-text { font-size: 14px; line-height: 1.8; color: #5A5A7A; }
+
+/* ── COMMENT ÇA MARCHE ── */
+.how-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-top: 56px; }
+.how-step { padding: 40px 32px; background: var(--cream); }
+.how-num { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300; color: var(--sand); line-height: 1; margin-bottom: 24px; }
+.how-title { font-size: 14px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+.how-text { font-size: 14px; line-height: 1.8; color: #5A5A7A; }
+.how-arrow { display: flex; align-items: center; justify-content: center; padding: 40px 0; }
+.how-arrow-line { width: 2px; height: 40px; background: var(--sand); }
+
+/* ── MINI DIAGNOSTIC ── */
+#mini-diag { background: var(--deep); padding: 100px 80px; }
+#mini-diag .section-tag { color: rgba(255,255,255,0.3); }
+#mini-diag .section-title { color: white; }
+#mini-diag .section-title em { color: var(--a3l); }
+#mini-diag .section-sub { color: rgba(255,255,255,0.5); }
+
+.diag-container { margin-top: 56px; max-width: 720px; }
+.diag-progress { display: flex; gap: 6px; margin-bottom: 48px; }
+.diag-progress-dot {
+  height: 2px; flex: 1; background: rgba(255,255,255,0.1); transition: background .3s;
+}
+.diag-progress-dot.active { background: var(--a3l); }
+.diag-progress-dot.done { background: rgba(255,255,255,0.3); }
+
+.diag-question { display: none; animation: fadeIn .3s ease; }
+.diag-question.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.diag-q-num { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+.diag-q-text { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: white; line-height: 1.4; margin-bottom: 36px; }
+
+.diag-options { display: flex; flex-direction: column; gap: 8px; }
+.diag-option {
+  padding: 18px 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  cursor: pointer; text-align: left; transition: all .2s; font-weight: 300;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.diag-option:hover { background: rgba(255,255,255,0.08); color: white; border-color: rgba(255,255,255,0.2); }
+.diag-option.selected { background: rgba(74,111,165,0.15); border-color: var(--a3l); color: white; }
+.diag-option-score { font-size: 11px; opacity: 0; }
+.diag-option.selected .diag-option-score { opacity: 0.4; }
+
+.diag-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 36px; }
+.diag-btn-prev {
+  padding: 12px 24px; background: transparent; color: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.1); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+  transition: all .2s;
+}
+.diag-btn-prev:hover { color: white; border-color: rgba(255,255,255,0.3); }
+.diag-btn-next {
+  padding: 12px 28px; background: white; color: var(--deep);
+  border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; transition: opacity .2s;
+}
+.diag-btn-next:hover { opacity: 0.85; }
+.diag-btn-next:disabled { opacity: 0.3; cursor: default; }
+
+/* Email step */
+.diag-email-step { display: none; }
+.diag-email-step.active { display: block; animation: fadeIn .3s ease; }
+.diag-email-title { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: white; line-height: 1.3; margin-bottom: 16px; }
+.diag-email-sub { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 36px; line-height: 1.8; }
+.diag-form { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }
+.diag-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.diag-input {
+  padding: 14px 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: white; font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none; transition: border-color .2s; font-weight: 300;
+}
+.diag-input::placeholder { color: rgba(255,255,255,0.25); }
+.diag-input:focus { border-color: var(--a3l); }
+.diag-submit {
+  padding: 16px; background: white; color: var(--deep);
+  border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; transition: opacity .2s; margin-top: 8px;
+}
+.diag-submit:hover { opacity: 0.85; }
+.diag-note-rgpd { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 12px; line-height: 1.6; }
+
+/* Résultat mini diag */
+.diag-result { display: none; animation: fadeIn .4s ease; }
+.diag-result.active { display: block; }
+.diag-result-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: white; line-height: 1.3; margin-bottom: 20px; }
+.diag-result-title em { font-style: italic; }
+.diag-result-box { padding: 32px; border-left: 3px solid; margin: 28px 0; }
+.diag-result-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.diag-result-module { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: white; margin-bottom: 12px; }
+.diag-result-text { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.6); }
+.diag-result-cta { margin-top: 32px; }
+.diag-result-btn {
+  padding: 16px 36px; background: white; color: var(--deep);
+  border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  cursor: pointer; transition: opacity .2s; display: inline-block; text-decoration: none;
+}
+.diag-result-note { font-size: 13px; color: rgba(255,255,255,0.3); margin-top: 16px; }
+
+/* ── MODULES ── */
+.modules-section { padding: 100px 80px; background: var(--cream); }
+.modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3px; margin-top: 56px; }
+.module-card {
+  padding: 44px 40px; background: var(--warm); position: relative;
+  border-top: 3px solid transparent; transition: transform .2s;
+}
+.module-card:hover { transform: translateY(-2px); }
+.module-card:nth-child(1) { border-color: var(--a1); }
+.module-card:nth-child(2) { border-color: var(--a2); }
+.module-card:nth-child(3) { border-color: var(--a3); }
+.module-card:nth-child(4) { border-color: var(--a4); }
+.module-num { font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300; line-height: 1; margin-bottom: 16px; opacity: 0.12; }
+.module-card:nth-child(1) .module-num { color: var(--a1); }
+.module-card:nth-child(2) .module-num { color: var(--a2); }
+.module-card:nth-child(3) .module-num { color: var(--a3); }
+.module-card:nth-child(4) .module-num { color: var(--a4); }
+.module-tag { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.module-card:nth-child(1) .module-tag { color: var(--a1); }
+.module-card:nth-child(2) .module-tag { color: var(--a2); }
+.module-card:nth-child(3) .module-tag { color: var(--a3); }
+.module-card:nth-child(4) .module-tag { color: var(--a4); }
+.module-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; line-height: 1.3; margin-bottom: 16px; }
+.module-desc { font-size: 14px; line-height: 1.8; color: #5A5A7A; margin-bottom: 24px; }
+.module-details { display: flex; flex-direction: column; gap: 6px; margin-bottom: 28px; }
+.module-detail { font-size: 12px; color: var(--taupe); display: flex; gap: 8px; }
+.module-detail::before { content: '→'; opacity: 0.5; }
+.module-price { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; }
+.module-price-note { font-size: 11px; color: var(--taupe); margin-top: 4px; }
+
+/* ── MARION ── */
+.marion-section {
+  padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.marion-tag { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--taupe); margin-bottom: 20px; display: block; }
+.marion-h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px,4vw,52px); font-weight: 300; line-height: 1.1; margin-bottom: 28px; }
+.marion-h2 em { font-style: italic; color: var(--a3); }
+.marion-text { font-size: 15px; color: #5A5A7A; line-height: 1.9; margin-bottom: 20px; }
+.marion-visual {
+  background: var(--deep); padding: 48px 40px;
+  border-left: 3px solid var(--a3);
+}
+.marion-quote { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 24px; }
+.marion-name { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--taupe); }
+
+/* ── FAQ ── */
+.faq-section { padding: 100px 80px; background: var(--cream); }
+.faq-list { margin-top: 56px; max-width: 720px; }
+.faq-item { border-bottom: 1px solid var(--sand); }
+.faq-q {
+  width: 100%; padding: 24px 0; background: none; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 400; color: var(--deep);
+  text-align: left; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; gap: 24px;
+}
+.faq-q span { transition: transform .2s; font-size: 20px; color: var(--taupe); }
+.faq-q.open span { transform: rotate(45deg); }
+.faq-a { font-size: 14px; line-height: 1.9; color: #5A5A7A; padding-bottom: 24px; display: none; max-width: 640px; }
+.faq-a.open { display: block; }
+
+/* ── FOOTER CTA ── */
+.footer-cta {
+  background: var(--deep); padding: 100px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.footer-cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px,5vw,64px); font-weight: 300; color: white; line-height: 1.05; margin-bottom: 24px; }
+.footer-cta-title em { font-style: italic; color: var(--a3l); }
+.footer-cta-sub { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.8; }
+.footer-cta-right { display: flex; flex-direction: column; gap: 20px; }
+.footer-cta-item { display: flex; gap: 20px; align-items: flex-start; }
+.footer-cta-num { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: var(--a3l); opacity: 0.5; min-width: 48px; line-height: 1; }
+.footer-cta-item-text { padding-top: 6px; }
+.footer-cta-item-label { font-size: 13px; font-weight: 500; color: white; margin-bottom: 4px; }
+.footer-cta-item-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+.footer-cta-btn-wrap { margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+/* ── FOOTER ── */
+footer {
+  background: #12121F; padding: 32px 80px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 16px; letter-spacing: 4px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+.footer-info { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .hero, .marion-section, .footer-cta { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 40px; }
+  .section, .modules-section, .faq-section { padding: 60px 24px; }
+  .problem-grid, .how-grid { grid-template-columns: 1fr; }
+  .modules-grid { grid-template-columns: 1fr; }
+  #mini-diag { padding: 60px 24px; }
+  .hero-visual { display: none; }
+  footer { flex-direction: column; gap: 12px; padding: 24px; text-align: center; }
+  .divider { margin: 0 24px; }
+  .footer-cta { padding: 60px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Clarté 360</div>
+  <button class="nav-cta" onclick="document.getElementById('mini-diag').scrollIntoView({behavior:'smooth'})">Faire le diagnostic gratuit</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-tag">Analyse structurée · Situation personnelle & financière</span>
+    <h1 class="hero-h1">Identifiez ce qui<br>bloque vraiment<br><em>votre situation.</em></h1>
+    <p class="hero-sub">Avant toute stratégie, il faut voir clairement. Clarté 360 est un outil d'analyse structurée qui identifie votre blocage principal — décisionnel, financier ou mental — et vous donne un plan d'action concret.</p>
+    <div class="hero-cta-group">
+      <a class="btn-primary" href="#mini-diag" onclick="event.preventDefault();document.getElementById('mini-diag').scrollIntoView({behavior:'smooth'})">Diagnostic gratuit — 1 minute</a>
+      <a class="btn-ghost" href="#modules" onclick="event.preventDefault();document.getElementById('modules').scrollIntoView({behavior:'smooth'})">Voir les modules</a>
+    </div>
+    <p class="hero-note">6 questions · Résultat immédiat · Sans engagement</p>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">5</div>
+      <div class="hero-stat-text">
+        <div class="hero-stat-label">Axes analysés</div>
+        <div class="hero-stat-sub">Décision, vision, flux, sérénité, alignement</div>
+      </div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">48h</div>
+      <div class="hero-stat-text">
+        <div class="hero-stat-label">Restitution personnalisée</div>
+        <div class="hero-stat-sub">Analyse experte de votre situation spécifique</div>
+      </div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-text">
+        <div class="hero-stat-label">Modules d'accompagnement</div>
+        <div class="hero-stat-sub">Un levier précis, un plan d'action sur 30 jours</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLÈME -->
+<section class="section">
+  <span class="section-tag">Pourquoi Clarté 360</span>
+  <h2 class="section-title">Vous avancez —<br><em>mais quelque chose résiste.</em></h2>
+  <p class="section-sub">Ce n'est pas un manque de volonté. Ce n'est pas un manque d'information. C'est l'absence d'un diagnostic précis sur ce qui bloque vraiment.</p>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-icon">⟳</div>
+      <div class="problem-title">Vous tournez en rond sur les mêmes décisions</div>
+      <p class="problem-text">Une décision importante attend depuis trop longtemps. Vous avez les éléments — mais vous n'arrivez pas à trancher, ou vous portez encore la décision après l'avoir prise.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">↓</div>
+      <div class="problem-title">L'argent part sans que vous décidiez vraiment</div>
+      <p class="problem-text">Vous regardez vos comptes. Vous savez qu'il y a des optimisations à faire. Mais l'information ne se transforme pas en action — et les fuites continuent.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">◎</div>
+      <div class="problem-title">Vous gérez bien — mais sans sérénité</div>
+      <p class="problem-text">Vous faites ce qu'il faut. Mais l'argent occupe votre tête en permanence. La gestion ne produit pas de légèreté — la boucle mentale tourne sans jamais se fermer.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="section">
+  <span class="section-tag">Comment ça marche</span>
+  <h2 class="section-title">Un parcours en<br><em>trois étapes.</em></h2>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-title">Le diagnostic gratuit</div>
+      <p class="how-text">6 questions. 1 minute. Vous identifiez votre axe de blocage principal parmi 5 dimensions. Résultat immédiat, sans inscription.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-title">Le diagnostic complet</div>
+      <p class="how-text">30 questions structurées. Scoring sur 5 axes. Restitution personnalisée par Marion sous 48h — pas un modèle générique, une analyse de votre situation.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-title">Le module adapté</div>
+      <p class="how-text">Un module ciblé sur votre blocage principal. 7 parties, exercices guidés, plan d'action 30 jours, et restitution experte finale.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MINI DIAGNOSTIC -->
+<section id="mini-diag">
+  <span class="section-tag">Étape 1 · Gratuit · 1 minute</span>
+  <h2 class="section-title">Quel est votre<br><em>blocage principal ?</em></h2>
+  <p class="section-sub">6 questions pour identifier la dimension qui mérite votre attention en priorité.</p>
+
+  <div class="diag-container">
+    <div class="diag-progress" id="diag-progress"></div>
+
+    <!-- Questions -->
+    <div id="diag-questions"></div>
+
+    <!-- Étape email -->
+    <div class="diag-email-step" id="diag-email">
+      <div class="diag-email-title">Votre résultat est prêt.</div>
+      <p class="diag-email-sub">Laissez votre prénom pour personnaliser votre résultat. Votre email est facultatif — il vous permettra de recevoir les détails complets.</p>
+      <div class="diag-form">
+        <div class="diag-form-row">
+          <input class="diag-input" id="d-prenom" type="text" placeholder="Votre prénom *" required>
+          <input class="diag-input" id="d-email"  type="email" placeholder="Votre email (facultatif)">
+        </div>
+        <button class="diag-submit" onclick="showResult()">Voir mon résultat →</button>
+        <p class="diag-note-rgpd">Vos données ne sont pas transmises à des tiers. Vous pouvez voir votre résultat sans email.</p>
+      </div>
+    </div>
+
+    <!-- Résultat -->
+    <div class="diag-result" id="diag-result"></div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,0.06);margin:0 80px;"></div>
+
+<!-- MODULES -->
+<section id="modules" class="modules-section">
+  <span class="section-tag">Les modules d'accompagnement</span>
+  <h2 class="section-title">Un levier précis.<br><em>Un plan concret.</em></h2>
+  <p class="section-sub">Chaque module cible une dimension spécifique identifiée par le diagnostic. 7 parties, exercices guidés, et une restitution experte personnalisée.</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-tag">Clarté Décisionnelle</div>
+      <div class="module-title">Prendre une décision assumée malgré l'incertitude</div>
+      <p class="module-desc">Pour celles et ceux qui portent encore leurs décisions après les avoir prises — ou qui attendent une certitude qui n'arrivera pas avant d'agir.</p>
+      <div class="module-details">
+        <div class="module-detail">Cartographie de la décision en attente</div>
+        <div class="module-detail">Méthode de décision sous incertitude</div>
+        <div class="module-detail">Techniques d'ancrage et de clôture</div>
+      </div>
+      <div class="module-price">147€</div>
+      <div class="module-price-note">Restitution experte personnalisée incluse · Sous 48–72h</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-tag">Architecture des Projets de Vie</div>
+      <div class="module-title">Construire une trajectoire cohérente</div>
+      <p class="module-desc">Pour celles et ceux qui ont des projets clairs mais qui coexistent sans hiérarchie — et qui dispersent leur énergie faute d'un cap défini.</p>
+      <div class="module-details">
+        <div class="module-detail">Inventaire et cartographie de vos projets</div>
+        <div class="module-detail">Définition d'un cap de vie actionnable</div>
+        <div class="module-detail">Séquençage et priorisation</div>
+      </div>
+      <div class="module-price">147€</div>
+      <div class="module-price-note">Restitution experte personnalisée incluse · Sous 48–72h</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-tag">Fuites Financières Invisibles</div>
+      <div class="module-title">Identifier et corriger les pertes silencieuses</div>
+      <p class="module-desc">Pour celles et ceux qui regardent leurs comptes mais dont l'argent continue de partir — parce qu'observer ne suffit pas, il faut un système d'action.</p>
+      <div class="module-details">
+        <div class="module-detail">Audit structuré des dépenses invisibles</div>
+        <div class="module-detail">Méthode de décision Garder / Résilier / Renégocier</div>
+        <div class="module-detail">Mise en place d'un système durable</div>
+      </div>
+      <div class="module-price">147€</div>
+      <div class="module-price-note">600 à 1 800€ récupérés en moyenne · Restitution sous 48–72h</div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-tag">Sérénité & Charge Mentale Financière</div>
+      <div class="module-title">Sortir de la boucle qui épuise</div>
+      <p class="module-desc">Pour celles et ceux qui gèrent bien mais dont l'argent occupe la tête en permanence — sans jamais vraiment se fermer.</p>
+      <div class="module-details">
+        <div class="module-detail">Identification et cartographie de la boucle cognitive</div>
+        <div class="module-detail">Structure de clôture hebdomadaire</div>
+        <div class="module-detail">Reprogrammation des déclencheurs d'anxiété</div>
+      </div>
+      <div class="module-price">147€</div>
+      <div class="module-price-note">Restitution experte personnalisée incluse · Sous 48–72h</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MARION -->
+<section class="marion-section">
+  <div>
+    <span class="marion-tag">À propos</span>
+    <h2 class="marion-h2">Pourquoi j'ai créé<br><em>Clarté 360</em></h2>
+    <p class="marion-text">En travaillant comme conseillère en stratégie patrimoniale, j'ai observé quelque chose de récurrent : les stratégies les mieux construites échouent quand elles reposent sur une situation floue.</p>
+    <p class="marion-text">Les personnes que j'accompagnais n'avaient pas besoin de plus d'information. Elles avaient besoin d'un diagnostic précis — sur ce qui bloquait vraiment, avant de passer à la stratégie.</p>
+    <p class="marion-text">Clarté 360 est cet outil. Une analyse structurée, une restitution personnalisée, un plan d'action concret — avant toute décision patrimoniale.</p>
+  </div>
+  <div class="marion-visual">
+    <div class="marion-quote">« Avant de parler de stratégie, il faut voir clairement. C'est pour ça que j'ai créé Clarté 360. »</div>
+    <div class="marion-name">Marion Raynaud · Conseillère en stratégie patrimoniale</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <span class="section-tag">Questions fréquentes</span>
+  <h2 class="section-title">Ce que vous<br><em>voulez savoir.</em></h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Est-ce du coaching ou du conseil financier ? <span>+</span></button>
+      <div class="faq-a">Ni l'un ni l'autre. Clarté 360 est un outil d'analyse structurée. Il identifie votre blocage principal et vous donne une structure pour avancer — ce n'est pas une thérapie, ce n'est pas un conseil en investissement. C'est un diagnostic de situation, avec une restitution personnalisée et un plan d'action concret.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">À qui s'adresse Clarté 360 ? <span>+</span></button>
+      <div class="faq-a">Aux personnes qui fonctionnent — qui gèrent, qui avancent — mais qui sentent que quelque chose résiste sans pouvoir le nommer précisément. Cadres, indépendants, professions libérales. Pas aux personnes en situation de crise financière sévère, pour qui d'autres ressources sont plus adaptées.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Qu'est-ce que je reçois concrètement ? <span>+</span></button>
+      <div class="faq-a">Après le diagnostic complet (30 questions, 27–47€) : une restitution personnalisée de plusieurs pages sous 48h — analyse de vos scores sur 5 axes, lecture de votre profil spécifique, forces et angles morts, plan d'action 30 jours, et recommandation de module adaptée. Après un module (147€) : 7 parties guidées + restitution experte finale sous 48–72h.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Combien de temps ça prend ? <span>+</span></button>
+      <div class="faq-a">Le mini diagnostic : 1 minute. Le diagnostic complet : 15 à 20 minutes. Un module : à votre rythme, sur 3 à 4 semaines. La restitution arrive dans les 48h suivant la complétion.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Est-ce que mes données sont confidentielles ? <span>+</span></button>
+      <div class="faq-a">Oui. Vos réponses et votre restitution sont strictement confidentielles. Elles ne sont accessibles qu'à vous et à Marion. Aucune donnée n'est transmise à des tiers.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta">
+  <div>
+    <h2 class="footer-cta-title">Commencez par<br><em>voir clairement.</em></h2>
+    <p class="footer-cta-sub">6 questions. 1 minute. Un résultat immédiat qui vous dit où porter votre attention en priorité.</p>
+  </div>
+  <div>
+    <div class="footer-cta-right">
+      <div class="footer-cta-item">
+        <div class="footer-cta-num">1</div>
+        <div class="footer-cta-item-text">
+          <div class="footer-cta-item-label">Mini diagnostic gratuit</div>
+          <div class="footer-cta-item-sub">6 questions · Résultat immédiat</div>
+        </div>
+      </div>
+      <div class="footer-cta-item">
+        <div class="footer-cta-num">2</div>
+        <div class="footer-cta-item-text">
+          <div class="footer-cta-item-label">Diagnostic complet</div>
+          <div class="footer-cta-item-sub">30 questions · Restitution personnalisée 48h · 27–47€</div>
+        </div>
+      </div>
+      <div class="footer-cta-item">
+        <div class="footer-cta-num">3</div>
+        <div class="footer-cta-item-text">
+          <div class="footer-cta-item-label">Module adapté</div>
+          <div class="footer-cta-item-sub">Plan d'action 30 jours · Restitution experte · 147€</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-cta-btn-wrap">
+      <button class="btn-primary" onclick="document.getElementById('mini-diag').scrollIntoView({behavior:'smooth'})">Faire le diagnostic gratuit →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Clarté 360</div>
+  <div class="footer-info">© 2025 Marion Raynaud · Conseillère en stratégie patrimoniale</div>
+</footer>
+
+<script>
+// ── QUESTIONS MINI DIAGNOSTIC ────────────────────────────────
+const QUESTIONS = [
+  {
+    id: 'q1', axe: 'a1',
+    text: "Quand vous devez prendre une décision importante, qu'est-ce qui se passe le plus souvent ?",
+    options: [
+      { label: "Je décide, mais je continue à me demander si c'était le bon choix", score: 1 },
+      { label: "J'attends d'avoir plus d'informations avant de me décider", score: 2 },
+      { label: "Je décide assez facilement et je passe à la suite", score: 3 },
+      { label: "J'évite la décision jusqu'à ce qu'elle s'impose d'elle-même", score: 1 }
+    ]
+  },
+  {
+    id: 'q2', axe: 'a2',
+    text: "Si quelqu'un vous demande où vous voulez être dans 5 ans, votre réponse est…",
+    options: [
+      { label: "Claire et précise — j'ai une vision définie de ma trajectoire", score: 3 },
+      { label: "Directionnelle — je sais en gros, mais sans cap vraiment défini", score: 2 },
+      { label: "Floue — j'ai des envies mais pas de direction claire", score: 1 },
+      { label: "Multiple — j'ai trop de projets qui se concurrencent", score: 1 }
+    ]
+  },
+  {
+    id: 'q3', axe: 'a3',
+    text: "Par rapport à vos dépenses et abonnements, vous êtes plutôt…",
+    options: [
+      { label: "Je sais exactement où part mon argent et j'agis dessus", score: 3 },
+      { label: "Je regarde mes comptes mais certaines choses m'échappent encore", score: 2 },
+      { label: "J'ai une liste quelque part mais je ne l'ai pas vraiment actionnée", score: 1 },
+      { label: "Je préfère ne pas trop regarder", score: 1 }
+    ]
+  },
+  {
+    id: 'q4', axe: 'a4',
+    text: "À quelle fréquence pensez-vous à l'argent de façon anxieuse ou répétitive ?",
+    options: [
+      { label: "Rarement — j'ai un système qui me permet de ne pas y penser entre les moments dédiés", score: 3 },
+      { label: "Parfois — surtout en fin de mois ou quand quelque chose déclenche la pensée", score: 2 },
+      { label: "Souvent — ça occupe régulièrement mon esprit sans que j'agisse vraiment", score: 1 },
+      { label: "Presque tout le temps — c'est une source de stress permanente", score: 1 }
+    ]
+  },
+  {
+    id: 'q5', axe: 'a2',
+    text: "Vos projets personnels et professionnels sont actuellement…",
+    options: [
+      { label: "Clairs et hiérarchisés — je sais lequel passer en premier", score: 3 },
+      { label: "Définis mais sans ordre de priorité clair", score: 2 },
+      { label: "Nombreux et qui se concurrencent pour mon attention", score: 1 },
+      { label: "Flous — je cherche encore à savoir ce que je veux vraiment", score: 1 }
+    ]
+  },
+  {
+    id: 'q6', axe: 'a1',
+    text: "Quand vous regardez votre situation financière, ce que vous ressentez est surtout…",
+    options: [
+      { label: "De la sérénité — les choses sont en ordre et je sais où je vais", score: 3 },
+      { label: "De la satisfaction partielle — ça va, mais il reste des zones floues", score: 2 },
+      { label: "De la frustration — je sais qu'il y a des optimisations à faire mais je ne les fais pas", score: 1 },
+      { label: "De l'anxiété — ça tourne en boucle dans ma tête", score: 1 }
+    ]
+  }
+];
+
+const RESULTATS = {
+  a1: {
+    titre: "Votre frein principal : la clarté décisionnelle",
+    texte: "Vous prenez vos décisions — mais vous continuez à les porter après. Ou vous attendez une certitude qui n'arrivera pas avant d'agir. Ce pattern a un coût invisible sur votre énergie et vos choix de vie.",
+    module: "Module 1 — Clarté Décisionnelle",
+    color: '#6B4FA0', light: '#A98FD0'
+  },
+  a2: {
+    titre: "Votre frein principal : l'architecture de vie",
+    texte: "Vous avez des projets, de l'énergie, une capacité à vous projeter. Mais ils coexistent sans hiérarchie — et l'énergie se disperse là où elle devrait se concentrer. Il manque un cap.",
+    module: "Module 2 — Architecture des Projets de Vie",
+    color: '#7A5C3A', light: '#B09070'
+  },
+  a3: {
+    titre: "Votre frein principal : les flux financiers",
+    texte: "Vous regardez vos comptes. Vous avez peut-être même une liste. Mais l'information ne se transforme pas en action — et l'argent continue de partir. Il manque un système, pas la volonté.",
+    module: "Module 3 — Fuites Financières Invisibles",
+    color: '#4A6FA5', light: '#7A9FD5'
+  },
+  a4: {
+    titre: "Votre frein principal : la charge mentale financière",
+    texte: "Vous gérez bien — mais l'argent occupe votre tête en permanence. La gestion ne produit pas de sérénité. La boucle tourne sans se fermer, et ça coûte de l'énergie sur tout le reste.",
+    module: "Module 4 — Sérénité & Charge Mentale Financière",
+    color: '#2A7060', light: '#6ABFA8'
+  }
+};
+
+// ── ÉTAT ─────────────────────────────────────────────────────
+let current = 0;
+let answers = {}; // { axe: totalScore, ... }
+let selected = new Array(QUESTIONS.length).fill(null);
+
+// ── INIT ─────────────────────────────────────────────────────
+function init() {
+  // Progress dots
+  const prog = document.getElementById('diag-progress');
+  prog.innerHTML = QUESTIONS.map((_,i) => `<div class="diag-progress-dot" id="dot-${i}"></div>`).join('');
+
+  // Questions HTML
+  const qWrap = document.getElementById('diag-questions');
+  qWrap.innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="diag-question ${qi === 0 ? 'active' : ''}" id="q-${qi}">
+      <div class="diag-q-num">Question ${qi+1} sur ${QUESTIONS.length}</div>
+      <div class="diag-q-text">${q.text}</div>
+      <div class="diag-options">
+        ${q.options.map((o, oi) => `
+          <button class="diag-option" onclick="selectOption(${qi}, ${oi}, ${o.score}, '${q.axe}')">
+            <span>${o.label}</span>
+          </button>`).join('')}
+      </div>
+      <div class="diag-nav">
+        ${qi > 0 ? `<button class="diag-btn-prev" onclick="goTo(${qi-1})">← Précédent</button>` : '<span></span>'}
+        <button class="diag-btn-next" id="next-${qi}" onclick="goNext(${qi})" disabled>
+          ${qi < QUESTIONS.length - 1 ? 'Suivant →' : 'Voir mon résultat →'}
+        </button>
+      </div>
+    </div>`).join('');
+
+  updateProgress();
+}
+
+function selectOption(qi, oi, score, axe) {
+  // Désélectionner les autres
+  const opts = document.querySelectorAll(`#q-${qi} .diag-option`);
+  opts.forEach(o => o.classList.remove('selected'));
+  opts[oi].classList.add('selected');
+
+  // Enregistrer
+  selected[qi] = { score, axe };
+  document.getElementById(`next-${qi}`).disabled = false;
+}
+
+function goNext(qi) {
+  if (!selected[qi]) return;
+  if (qi < QUESTIONS.length - 1) {
+    goTo(qi + 1);
+  } else {
+    showEmailStep();
+  }
+}
+
+function goTo(qi) {
+  document.querySelectorAll('.diag-question').forEach(q => q.classList.remove('active'));
+  document.getElementById(`q-${qi}`).classList.add('active');
+  current = qi;
+  updateProgress();
+}
+
+function updateProgress() {
+  QUESTIONS.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    if (i < current) dot.className = 'diag-progress-dot done';
+    else if (i === current) dot.className = 'diag-progress-dot active';
+    else dot.className = 'diag-progress-dot';
+  });
+}
+
+function showEmailStep() {
+  document.querySelectorAll('.diag-question').forEach(q => q.classList.remove('active'));
+  document.getElementById('diag-progress').style.display = 'none';
+  document.getElementById('diag-email').classList.add('active');
+}
+
+function showResult() {
+  const prenom = document.getElementById('d-prenom').value.trim() || 'vous';
+
+  // Calculer les scores par axe (le plus bas = dominant)
+  const scores = { a1: 0, a2: 0, a3: 0, a4: 0 };
+  const counts = { a1: 0, a2: 0, a3: 0, a4: 0 };
+  selected.forEach(s => {
+    if (s && scores[s.axe] !== undefined) {
+      scores[s.axe] += s.score;
+      counts[s.axe]++;
+    }
+  });
+
+  // Moyenne par axe (axe avec la moyenne la plus basse = plus problématique)
+  const moyennes = {};
+  for (const k in scores) {
+    moyennes[k] = counts[k] > 0 ? scores[k] / counts[k] : 3;
+  }
+  const dominant = Object.keys(moyennes).reduce((a, b) => moyennes[a] <= moyennes[b] ? a : b);
+  const res = RESULTATS[dominant];
+
+  document.getElementById('diag-email').classList.remove('active');
+  const resultDiv = document.getElementById('diag-result');
+  resultDiv.innerHTML = `
+    <div class="diag-result-title">${prenom !== 'vous' ? prenom + ',' : ''} <em>${res.titre.toLowerCase()}</em></div>
+    <div class="diag-result-box" style="border-color:${res.color}; background:${res.color}15;">
+      <div class="diag-result-label" style="color:${res.light};">Ce que vos réponses révèlent</div>
+      <div class="diag-result-module" style="color:${res.color};">${res.module}</div>
+      <p class="diag-result-text">${res.texte}</p>
+    </div>
+    <div class="diag-result-cta">
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:20px;line-height:1.8;">Pour aller plus loin : le diagnostic complet analyse votre situation sur 30 questions et 5 axes — avec une restitution personnalisée par Marion sous 48h.</p>
+      <a class="diag-result-btn" href="mailto:marion.raynaud.pro@gmail.com?subject=Diagnostic complet Clarté 360&body=Bonjour Marion, je souhaite passer le diagnostic complet. Mon prénom : ${prenom}.">
+        Passer le diagnostic complet →
+      </a>
+      <p class="diag-result-note">27–47€ · Restitution personnalisée sous 48h</p>
+    </div>`;
+  resultDiv.classList.add('active');
+}
+
+function toggleFaq(btn) {
+  const a = btn.nextElementSibling;
+  const isOpen = a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.faq-q').forEach(el => el.classList.remove('open'));
+  if (!isOpen) { a.classList.add('open'); btn.classList.add('open'); }
+}
+
+init();
+</script>
+</body>
+</html>
